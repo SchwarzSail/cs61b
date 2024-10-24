@@ -78,24 +78,24 @@ public class MachineStage implements AdventureStage {
     }
 
     public static int mysteryMax(int a, int b) {
-        int w = (b - a) >> 31;
+        int w = (b - a) >> 31;// 取出最低位，如果为相减为负数，那么右移31位后全为 1
         int z = ~(b - a) >> 31;
-
-        int max = b & w | a & z;
+        // 如果 w == 1, 说明 a > b, 则 a & w 返回 a
+        int max = a & w | b & z;
         return max;
     }
 
     public static int mysteryAdd(int a, int b) {
         int x = a, y = b;
         int xor, and, temp;
-        and = x & y;
-        xor = x ^ y;
+        and = x & y; // 计算进位部分
+        xor = x ^ y; // 计算不进位的部分
 
         while (and != 0) {
             and <<= 1;
-            temp = xor ^ and;
-            and &= xor;
-            xor = temp;
+            temp = xor & and;
+            xor = xor ^ and;
+            and = temp;
         }
         return xor;
     }
@@ -126,7 +126,7 @@ public class MachineStage implements AdventureStage {
         int i = 0;
         int sum = 0;
         while (i < x.length) {
-            sum = sum + mysteryAdd(sum, x[i]);
+            sum = mysteryAdd(sum, x[i]);
             i = i + 1;
         }
         return sum;
